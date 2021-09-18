@@ -1,3 +1,6 @@
+# A .nsp (pfs0) is a simple file: a header that describes the files it contains, with said files appended to it, in plaintext.
+# .nsp is the Switch format for installables, similar to what .cia was to the 3ds.
+
 import sys, os
 from struct import pack as pk, unpack as upk
 

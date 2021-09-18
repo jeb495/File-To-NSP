@@ -4,7 +4,10 @@
 import sys, os
 from struct import pack as pk, unpack as upk
 
+# Generate header for .nsp file (pfs0)
 def gen_header(argc, argv):
+    
+    #file setup
     stringTable = '\x00'.join([os.path.basename(file) for file in argv[1:]])
     headerSize = 0x10 + (argc-1)*0x18 + len(stringTable)
     remainder = 0x10 - headerSize%0x10
@@ -16,6 +19,7 @@ def gen_header(argc, argv):
     fileNamesLengths = [len(os.path.basename(file))+1 for file in argv[1:]] # +1 for the \x00 separator
     stringTableOffsets = [sum(fileNamesLengths[:n]) for n in range(argc-1)]
     
+    #header generation
     header =  b''
     header += b'PFS0'
     header += pk('<I', argc-1)
@@ -32,11 +36,13 @@ def gen_header(argc, argv):
     
     return header   
 
+#generate .nsp file
 def mk_nsp(argc, argv):
     if argc == 1:
         print('Usage is: %s file1 file 2 ...' % sys.argv[0])
         return 1
         
+    #Get user input for the output file name
     name = input('Name of output nsp? ')
     outf = open(os.path.join(os.path.dirname(__file__), name), 'wb')
     
@@ -44,6 +50,7 @@ def mk_nsp(argc, argv):
     header = gen_header(argc, argv)
     outf.write(header)
     
+    #loop through file as plaintext
     for f in argv[1:]:
         print('Appending %s...' % f)
         with open(f, 'rb') as inf:

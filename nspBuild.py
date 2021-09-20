@@ -50,7 +50,7 @@ def mk_nsp(argc, argv):
     header = gen_header(argc, argv)
     outf.write(header)
     
-    #loop through file as plaintext
+    #loop through file and append as plaintext
     for f in argv[1:]:
         print('Appending %s...' % f)
         with open(f, 'rb') as inf:
